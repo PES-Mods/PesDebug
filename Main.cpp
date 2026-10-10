@@ -9,6 +9,8 @@ using namespace std;
 std::list<std::string> DebugMessages;
 std::list<std::wstring> DebugMessagesW;
 
+bool initialized = false;
+
 static CRITICAL_SECTION *cs() {
     static CRITICAL_SECTION cs;
     return &cs;
@@ -73,11 +75,13 @@ void OnRender() {
 }
 
 void MyDebugPrint(std::string const &message) {
-    EnterCriticalSection(cs());
-    while (DebugMessages.size() >= 1000)
-        DebugMessages.pop_front();
-    DebugMessages.push_back(message);
-    LeaveCriticalSection(cs());
+    if (initialized) {
+        EnterCriticalSection(cs());
+        while (DebugMessages.size() >= 1000)
+            DebugMessages.pop_front();
+        DebugMessages.push_back(message);
+        LeaveCriticalSection(cs());
+    }
 }
 
 void __stdcall MyOutputDebugStringA(LPCSTR lpOutputString) {
@@ -87,8 +91,6 @@ void __stdcall MyOutputDebugStringA(LPCSTR lpOutputString) {
 extern "C" __declspec(dllexport) void DebugPrint(char const *message) {
     MyDebugPrint(message);
 }
-
-bool initialized = false;
 
 class PesDebug {
 public:

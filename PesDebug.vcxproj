@@ -77,11 +77,21 @@
   <PropertyGroup>
     <Pes5Dir>$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\KONAMIPES5\PES5', 'installdir', null, RegistryView.Registry32))</Pes5Dir>
     <Pes6Dir>$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\KONAMIPES6\PES6', 'installdir', null, RegistryView.Registry32))</Pes6Dir>
+    <We9Dir>$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\KONAMIWE9\WE9', 'installdir', null, RegistryView.Registry32))</We9Dir>
+    <We9LeDir>$([MSBuild]::GetRegistryValueFromView('HKEY_LOCAL_MACHINE\SOFTWARE\KONAMI\WE9LEK', 'installdir', null, RegistryView.Registry32))</We9LeDir>
   </PropertyGroup>
   <Target Name="CopyToGames" AfterTargets="Build">
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(Pes5Dir)\plugins" Condition="'$(Pes5Dir)' != '' And Exists('$(Pes5Dir)\plugins')" />
-    <Message Importance="high" Condition="'$(Pes5Dir)' != '' And Exists('$(Pes5Dir)\plugins')" Text="Copied $(TargetFileName) to game folder: $(Pes5Dir)\plugins" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(Pes6Dir)\plugins" Condition="'$(Pes6Dir)' != '' And Exists('$(Pes6Dir)\plugins')" />
-    <Message Importance="high" Condition="'$(Pes6Dir)' != '' And Exists('$(Pes6Dir)\plugins')" Text="Copied $(TargetFileName) to game folder: $(Pes6Dir)\plugins" />
+    <ItemGroup>
+      <PluginFiles Include="$(TargetPath)" />
+      <PluginFiles Include="$(TargetDir)$(TargetName).pdb" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PluginFiles)" DestinationFolder="$(Pes5Dir)\plugins" Condition="'$(Pes5Dir)' != '' And Exists('$(Pes5Dir)\plugins')" />
+    <Message Importance="high" Condition="'$(Pes5Dir)' != '' And Exists('$(Pes5Dir)\plugins')" Text="Copied @(PluginFiles->'%(Filename)%(Extension)', ', ') to game folder: $(Pes5Dir)\plugins" />
+    <Copy SourceFiles="@(PluginFiles)" DestinationFolder="$(We9Dir)\plugins" Condition="'$(We9Dir)' != '' And Exists('$(We9Dir)\plugins')" />
+    <Message Importance="high" Condition="'$(We9Dir)' != '' And Exists('$(We9Dir)\plugins')" Text="Copied @(PluginFiles->'%(Filename)%(Extension)', ', ') to game folder: $(We9Dir)\plugins" />
+    <Copy SourceFiles="@(PluginFiles)" DestinationFolder="$(We9LeDir)\plugins" Condition="'$(We9LeDir)' != '' And Exists('$(We9LeDir)\plugins')" />
+    <Message Importance="high" Condition="'$(We9LeDir)' != '' And Exists('$(We9LeDir)\plugins')" Text="Copied @(PluginFiles->'%(Filename)%(Extension)', ', ') to game folder: $(We9LeDir)\plugins" />
+    <Copy SourceFiles="@(PluginFiles)" DestinationFolder="$(Pes6Dir)\plugins" Condition="'$(Pes6Dir)' != '' And Exists('$(Pes6Dir)\plugins')" />
+    <Message Importance="high" Condition="'$(Pes6Dir)' != '' And Exists('$(Pes6Dir)\plugins')" Text="Copied @(PluginFiles->'%(Filename)%(Extension)', ', ') to game folder: $(Pes6Dir)\plugins" />
   </Target>
 </Project>
