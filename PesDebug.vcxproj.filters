@@ -17,13 +17,19 @@
     <ClCompile Include="imgui\imgui_demo.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="settings\Settings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="imgui">
       <UniqueIdentifier>{e9eea0cf-c0dc-4ca7-85fa-93d49b76c925}</UniqueIdentifier>
     </Filter>
+    <Filter Include="settings">
+      <UniqueIdentifier>{70d12e7f-611c-4746-bc86-7d7ac7f2eec2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PesImGui.h" />
+    <ClInclude Include="Config.hpp" />
+    <ClInclude Include="settings\Settings.h" />
   </ItemGroup>
 </Project>

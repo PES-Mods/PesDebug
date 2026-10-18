@@ -2,6 +2,7 @@
 #include <vector>
 #include <list>
 #include "PesImGui.h"
+#include "Config.hpp"
 
 using namespace plugin;
 using namespace std;
@@ -99,6 +100,10 @@ public:
             return;
         auto v = PES::GetAppVersion();
         if (v.id() != ID_PES5 && v.id() != ID_PES6)
+            return;
+        Config config;
+        config.Read(PES::GameDirPath(L"plugins\\PesDebug.ini"));
+        if (!config.ENABLED)
             return;
         if (!ImGuiEnsureLoaded())
             return;
